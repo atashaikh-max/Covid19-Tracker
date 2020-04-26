@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Covid19 Tracker</title>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: sans-serif;
+		}
+		h1{
+			font-weight: bold;
+			font-size: 4em;
+		}
+		a{
+			color: darkgrey;
+			font-size: 18px;
+			margin-right: 10px;
+		}
+		form{
+			margin-top: 60px;
+			margin-bottom: 15px;
+		}
+		p{
+			font-size: 18px;
+			color: #333;
+		}
+		b{
+			font-weight: 200;
+		}
+		input{
+			padding: 5px;
+			line-height: 30px;
+			text-indent: 8px;
+			font-size: 18px;
+			max-width: 250px;
+		}
+		button{
+			padding: 5px;
+			border:none;
+			line-height: 30px;
+			outline: none;
+			background: #333;
+			color: #fff;
+			cursor: pointer;
+			font-size: 18px;
+			margin-left: 8px;
+		}
+		footer{
+			border-top: 1px solid #ccc;
+			color: darkgrey;
+			padding: 20px 0 0 10px;
+		}
+		footer p{
+			color: darkgrey;
+		}
+		strong{
+			font-size: 18px;
+		}
+		@media screen and (max-width: 624px){
+			h1{
+				font-size: 3rem;
+			}
+			body{
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				text-align:center;
+			}
+			.active{
+				color: #000;
+			}
+
+	</style>
+</head>
+<body style="display: flex;justify-content: space-around;max-width: 1000px;margin-top: 20px;">
+<aside style="max-width: 250px;">
+	<p id="msgFive"></p>
+</aside>
+<div style="display: flex;flex-direction: column;">
+<main style="min-height: 90vh;display: flex;flex-direction: column;flex-grow: 1;max-width: 700px;margin: 0 auto;">
+		<h1>Covid19 Tracker</h1>
+			<div>
+				<a href="#" class="active">Home</a>
+				<a href="higherOrderFunction.html">Weather</a>
+				<a href="help.html">Help</a>
+			</div>
+		<form>
+			<p>Search for covid 19 status in your contry</p>
+			<input type="text" name="" id="country" placeholder="Country"><button>Search</button><br>
+			<small>Use full name of the country eg: united arab emirates instead of UAE.</small>
+		</form>
+		<p id="msgSix"></p>
+		<p id="msgOne"></p>
+		<p id="msgTwo"></p>
+		<p id="msgThree"></p>
+		<p id="msgFour"></p>
+</main>
+<footer>
+	<p>An Ata Shaikh Production Covid 19 Tracker &copy; 2020</p>
+</footer>
+</div>
+<script type="text/javascript">
+	//https://api.covid19api.com/world/total
+	const form = document.querySelector('form');
+	const country = document.getElementById('country').value;
+	const msgOne = document.getElementById('msgOne');
+	const msgTwo = document.getElementById('msgTwo');
+	const msgThree = document.getElementById('msgThree');
+	const msgFour = document.getElementById('msgFour');
+	const msgFive = document.getElementById('msgFive');
+	const msgSix = document.getElementById('msgSix');
+	form.addEventListener('submit', (e)=>{
+		e.preventDefault();
+		msgOne.textContent = 'Loading...';
+
+		fetch(`https://api.covid19api.com/live/country/${country}/status/confirmed`)
+		.then((res)=>{
+			res.json()
+			.then((data)=>{
+					data = data[data.length-1];
+					console.log(data);
+					if (data) {
+					msgOne.innerHTML = `<b>Confirmed cases:</b> ${data.Confirmed}`
+					msgTwo.innerHTML = `<b>Active cases:</b> ${data.Active}`
+					msgThree.innerHTML = `<b>Death:</b> ${data.Deaths}`
+					msgFour.innerHTML = `<b>Recovered:</b> ${data.Recovered}`
+					msgSix.innerHTML = `<b>Country:</b> ${data.Country}`
+					}else if(data === undefined){
+						msgOne.textContent =`Could not find the location.`
+					}
+					else{
+						msgOne.textContent =`Unable to connect to the covid 19 services, try again later.`
+					}
+				
+			})
+		})
+	});
+	window.addEventListener('load', ()=>{
+				fetch('https://api.covid19api.com/world/total')
+		.then((res)=>{
+			res.json()
+			.then((data)=>{
+				msgFive.innerHTML = `<strong>World </strong><hr> <b>Total Confirmed: </b>${data.TotalConfirmed}<br> <b>Total Deaths:</b> ${data.TotalDeaths}<br> <b>Total Recovered:</b> ${data.TotalRecovered} `
+			})
+		})
+	})
+</script>
+</body>
+</html>
