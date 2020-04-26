@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Higher Order Function</title>
+	<style type="text/css">
+		h1{
+			margin-bottom: 0;
+			margin-top: 0;
+		}
+		a{
+			font-family: sans-serif;
+			color: darkgrey;
+			font-size: 18px;
+			text-decoration: none;
+			margin-right: 8px;
+		}
+		a:hover{
+			color: #000;
+		}
+		form{
+			margin-top: 100px;
+		}
+		p{
+			font-family: sans-serif;
+			font-size: 18px;
+		}
+		footer{
+			color: darkgrey;
+			padding: 10px;
+			font-size: 18px;
+			border-top: 1px solid #ccc;
+		}
+		input{
+			padding: 5px;
+			line-height: 30px;
+			width: 250px;
+			font-size: 16px;
+			font-family: sans-serif;
+			text-indent: 6px;
+		}
+		.active{
+			color: #000;
+		}
+		button{
+			line-height: 30px;
+			background: #333;
+			color: #fff;
+			font-family: sans-serif;
+			padding: 5px;
+			border: none;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		button:hover{
+			background: #000;
+		}
+		@media screen and (max-width: 670px){
+			body{
+				display: flex;
+				justify-content: center;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+			}
+		}
+		@media screen and (max-width: 524px){
+				button{
+				width: 260px;
+				margin-top: 5px;
+			}
+		}
+	</style>
+</head>
+<body style="font-size: 16px;max-width: 750px;margin: 0 auto;">
+	<div style="display: flex;flex-grow: 1;flex-direction: column;min-height: 90vh;">
+	<h1 style="font-family: sans-serif; font-size: 4em">Weather</h1>
+	<div>
+			<a href="#" class="active">Weather</a>
+	<a href="#">About</a>
+	<a href="#">Help</a>
+	</div>
+	<form>
+		<p>Use this site to get weather details</p>
+		<input type="text" placeholder="Location" name="" id="location">
+		<button id="searchBtn">Search</button><br>
+		<img style="margin-top: 8px;">
+		<p id="messageOne"></p>
+		<p id="messageTwo"></p>
+	</form>
+	</div>
+
+	<footer>
+		<p>An Ata Shaikh Production <span style="color: #333;">Weather</span> &copy; 2020.</p>
+	</footer>
+	<script type="text/javascript">
+		// let corrAns = 'I am ata shaikh'.split(' ');
+		// let ans = 'I am ashraf shaikh'.split(' ');
+
+		// const checkAns = corrAns.every((word, index) => {
+		// 	return word.toUpperCase() === ans[index].toUpperCase();
+		// });
+		// if (checkAns) {
+		// 	console.log('Answer is true');
+		// }
+		// else{
+		// 	console.log('Wrong Answer');
+		// }
+
+		// function add(a,b, callback){
+		// 	return setTimeout(() => {
+		// 		callback(a+b);
+		// 	},2000);
+		// }
+
+		// add(1,4, (sum) => {
+		// 	console.log(sum);
+		// });
+		const weatherForm = document.querySelector('form');
+		weatherForm.addEventListener('submit',(e)=>{
+						e.preventDefault();
+			const Location = document.getElementById('location').value;
+			const messageOne = document.getElementById('messageOne');
+			const messageTwo = document.getElementById('messageTwo');
+			const img = document.querySelector('img');
+			messageOne.textContent = 'Loading...';
+			fetch('http://api.weatherstack.com/current?access_key=ba358a62ee1febdcf5c8c45508d96c34&query='+Location)
+			.then((response)=>{
+				response.json()
+					.then((data)=>{
+				console.log(data);
+				if (data.error) {
+					messageOne.textContent = 'Unable to connect to the weather service, please check your internet connection.'
+					messageTwo.textContent = 'If problem remains please try again later.'
+				}
+				else{
+				img.src = data.current.weather_icons;
+				messageOne.textContent ='Temperature: '+ data.current.temperature+'°C, Chances of rain: '+data.current.precip+'%.';
+				messageTwo.textContent = 'Location: '+ data.location.name+', '+data.location.region+', '+data.location.country+'.';
+				}
+			});
+			})
+		});
+
+
+		
+
+	</script>
+
+</body>
+</html>
